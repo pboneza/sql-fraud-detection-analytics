@@ -2,64 +2,69 @@
 
 ## Architecture
 
-PostgreSQL runs inside Docker rather than as a separate local installation. The database data is stored in a named Docker volume and persists when the container is stopped.
+PostgreSQL runs inside Docker rather than as a separate Windows installation. The database data is stored in a named Docker volume and persists when the container is stopped.
 
 ## Prerequisites
 
-- Git
-- Docker Desktop
-- A terminal
+- Windows 10 or Windows 11
+- Git for Windows
+- Docker Desktop for Windows
+- PowerShell
 - Optional graphical database client: DBeaver, pgAdmin, or another PostgreSQL-compatible client
 
-On Apple Silicon, install the Apple-chip version of Docker Desktop.
+Docker Desktop should use its WSL 2 backend. If the installer asks whether to use WSL 2 instead of Hyper-V, select WSL 2.
 
-## 1. Clone the repository
+## 1. Verify Docker Desktop
 
-```bash
+Open Docker Desktop and wait until the Docker engine is running. In PowerShell, execute:
+
+```powershell
+docker version
+docker compose version
+```
+
+## 2. Clone the repository
+
+```powershell
 git clone https://github.com/pboneza/sql-fraud-detection-analytics.git
-cd sql-fraud-detection-analytics
+Set-Location sql-fraud-detection-analytics
 git switch -c milestone-1-foundations
 ```
 
-## 2. Create the local environment file
+## 3. Create the local environment file
 
-```bash
-cp .env.example .env
+```powershell
+Copy-Item .env.example .env
 ```
 
 Open `.env` and replace the example password with a local password. The real `.env` file is excluded from Git and must not be committed.
 
-## 3. Start PostgreSQL
+## 4. Start PostgreSQL
 
-Confirm that Docker Desktop is open and its engine is running. Then execute:
-
-```bash
+```powershell
 docker compose up -d
 ```
 
 Check the service:
 
-```bash
+```powershell
 docker compose ps
 ```
 
 The PostgreSQL service should eventually report a healthy status.
 
-## 4. Verify the database
+## 5. Verify the database
 
-```bash
-docker compose exec postgres \
-  psql -U fraud_admin -d fraud_analytics \
-  -c "SELECT version();"
+```powershell
+docker compose exec postgres psql -U fraud_admin -d fraud_analytics -c "SELECT version();"
 ```
 
 If `POSTGRES_USER` or `POSTGRES_DB` was changed in `.env`, use the new values in this command.
 
-## 5. Open an interactive SQL session
+## 6. Open an interactive SQL session
 
-```bash
-docker compose exec postgres \
-  psql -U fraud_admin -d fraud_analytics
+```powershell
+docker compose exec postgres psql -U fraud_admin -d fraud_analytics
 ```
 
 Inside `psql`, run:
@@ -91,19 +96,19 @@ Use these values in a PostgreSQL-compatible client:
 
 Stop the containers while preserving the database:
 
-```bash
+```powershell
 docker compose stop
 ```
 
 Start them again:
 
-```bash
+```powershell
 docker compose start
 ```
 
 Alternatively, remove the containers while preserving the named volume:
 
-```bash
+```powershell
 docker compose down
 ```
 
@@ -113,7 +118,9 @@ docker compose down
 
 Record the following after setup:
 
-- operating system and architecture;
+- Windows edition and version;
+- system architecture;
+- WSL version from `wsl --version`;
 - Docker Desktop version;
 - Docker Engine version from `docker version`;
 - Docker Compose version from `docker compose version`;
