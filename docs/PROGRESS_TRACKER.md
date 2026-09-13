@@ -1,0 +1,62 @@
+# Progress Tracker
+
+Last updated: 2026-09-13
+
+## Current position
+
+- Current milestone: **1 — Environment, raw data, and SQL foundations**
+- Current phase: **Environment and repository setup**
+- Overall status: **In progress**
+
+## Milestone status
+
+| Milestone | Status | Evidence |
+|---|---|---|
+| 1. Environment, raw data, and SQL foundations | In progress | Repository framework created |
+| 2. Data cleaning and quality assurance | Not started | — |
+| 3. Relational data modelling | Not started | — |
+| 4. Intermediate analytical SQL | Not started | — |
+| 5. Time-series analytics | Not started | — |
+| 6. Fraud and anomaly detection | Not started | — |
+| 7. Performance optimisation | Not started | — |
+| 8. Real-time data extension | Not started | — |
+| 9. Power BI dashboard | Not started | — |
+| 10. Documentation and project presentation | Not started | — |
+
+## Completed
+
+- Created the public GitHub repository.
+- Defined the system objectives and milestone roadmap.
+- Established the initial repository structure.
+- Added data-management and version-control guidance.
+- Defined the Milestone 1 scope and acceptance criteria.
+
+## Immediate next actions
+
+- Install Docker Desktop for the local database environment.
+- Verify that Docker is running.
+- Clone the GitHub repository locally.
+- Create the first milestone branch.
+- Start PostgreSQL through the project container configuration.
+- Verify PostgreSQL access and record the version.
+- Select and document the raw transaction dataset.
+- Perform the first raw-data inspection without modifying the source.
+
+## Evidence to capture during Milestone 1
+
+- PostgreSQL version command and result.
+- Successful database connection.
+- Dataset source and licence or usage conditions.
+- Raw file names, sizes, record counts, and columns.
+- Initial data-quality observations.
+- SQL scripts and validation results.
+- Milestone findings and implementation decisions.
+
+## Decisions
+
+| Date | Decision | Reason |
+|---|---|---|
+| 2026-09-13 | PostgreSQL is the primary database | Supports standards-based SQL and advanced analytical and engineering features |
+| 2026-09-13 | Work is delivered through defined implementation milestones | Provides traceable scope, validation, and project progression |
+| 2026-09-13 | Raw data will not be modified directly | Preserves traceability and reproducibility |
+| 2026-09-13 | PostgreSQL will run in Docker | Creates a portable and reproducible development environment |
