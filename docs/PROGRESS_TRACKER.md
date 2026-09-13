@@ -5,14 +5,14 @@ Last updated: 2026-09-13
 ## Current position
 
 - Current milestone: **1 — Environment, raw data, and SQL foundations**
-- Current phase: **Containerised PostgreSQL setup**
+- Current phase: **Raw-data selection and inspection**
 - Overall status: **In progress**
 
 ## Milestone status
 
 | Milestone | Status | Evidence |
 |---|---|---|
-| 1. Environment, raw data, and SQL foundations | In progress | Windows container runtime verified |
+| 1. Environment, raw data, and SQL foundations | In progress | PostgreSQL environment verified; raw-data work pending |
 | 2. Data cleaning and quality assurance | Not started | — |
 | 3. Relational data modelling | Not started | — |
 | 4. Intermediate analytical SQL | Not started | — |
@@ -32,28 +32,29 @@ Last updated: 2026-09-13
 - Defined the Milestone 1 scope and acceptance criteria.
 - Verified the Windows AMD64 development environment.
 - Verified Docker Desktop 4.90.0 and Docker Engine 29.7.2.
-- Verified Docker Compose 5.5.1.
-- Verified WSL 2.7.14.0.
+- Verified Docker Compose 5.5.1 and WSL 2.7.14.0.
+- Started and verified PostgreSQL 17.11 in Docker.
+- Verified database access through `psql` and DBeaver Community.
+- Merged the environment-verification record through Pull Request #2.
+- Completed and closed the environment-setup issue.
 
 ## Immediate next actions
 
-- Clone the GitHub repository locally.
-- Create the first milestone branch.
-- Create the local `.env` file from `.env.example`.
-- Start PostgreSQL through the project container configuration.
-- Verify PostgreSQL access and record the version.
-- Select a database client.
-- Select and document the raw transaction dataset.
-- Perform the first raw-data inspection without modifying the source.
+- Evaluate suitable financial transaction datasets.
+- Select a dataset with appropriate usage and redistribution conditions.
+- Document the source, purpose, structure, and limitations.
+- Download the original files without modifying them.
+- Record file names, sizes, row counts, columns, and apparent data types.
+- Define the initial data-quality checks.
+- Design the raw PostgreSQL staging table.
 
 ## Evidence to capture during Milestone 1
 
-- PostgreSQL version command and result.
-- Successful database connection.
 - Dataset source and licence or usage conditions.
 - Raw file names, sizes, record counts, and columns.
 - Initial data-quality observations.
-- SQL scripts and validation results.
+- PostgreSQL ingestion and validation results.
+- SQL scripts and baseline analytical results.
 - Milestone findings and implementation decisions.
 
 ## Decisions
@@ -63,4 +64,4 @@ Last updated: 2026-09-13
 | 2026-09-13 | PostgreSQL is the primary database | Supports standards-based SQL and advanced analytical and engineering features |
 | 2026-09-13 | Work is delivered through defined implementation milestones | Provides traceable scope, validation, and project progression |
 | 2026-09-13 | Raw data will not be modified directly | Preserves traceability and reproducibility |
-| 2026-09-13 | PostgreSQL will run in Docker | Creates a portable and reproducible development environment |
+| 2026-09-13 | PostgreSQL runs in Docker | Creates a portable and reproducible development environment |
