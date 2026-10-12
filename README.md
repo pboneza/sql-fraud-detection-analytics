@@ -29,20 +29,6 @@ This project develops a transaction-monitoring system progressively, beginning w
 - Power BI
 - Kafka-compatible event streaming
 
-## Project milestones
-
-| Milestone | Focus | Status |
-|---|---|---|
-| 1 | Environment, raw data, and SQL foundations | In progress |
-| 2 | Data cleaning and quality assurance | Not started |
-| 3 | Relational data modelling | Not started |
-| 4 | Intermediate analytical SQL | Not started |
-| 5 | Time-series analytics | Not started |
-| 6 | Fraud and anomaly detection | Not started |
-| 7 | Performance optimisation | Not started |
-| 8 | Real-time data extension | Not started |
-| 9 | Power BI dashboard | Not started |
-| 10 | Documentation and project presentation | Not started |
 
 ## Repository structure
 
@@ -64,19 +50,3 @@ dashboards/powerbi/           Power BI deliverables
 tests/                        Data and SQL validation
 ```
 
-Folders will be added progressively as the implementation advances, keeping the repository history aligned with the system's development.
-
-## Development approach
-
-Each milestone defines:
-
-1. The business requirement and expected outcome.
-2. The technical scope.
-3. Implementation tasks and deliverables.
-4. Validation and acceptance criteria.
-5. Documentation requirements.
-6. An optional advanced extension where appropriate.
-
-## Current work
-
-See the [environment setup guide](docs/ENVIRONMENT_SETUP.md), [Milestone 1 specification](sql/01_database_setup/README.md), and [progress tracker](docs/PROGRESS_TRACKER.md).
