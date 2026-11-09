@@ -1,45 +1,5 @@
-create table raw_transactions (
-	time_step int, 
-	transaction_type varchar(20), 
-	amount numeric(18,2), 
-	name_orig varchar(20), 
-	old_balance_orig numeric(18,2), 
-	new_balance_orig numeric(18,2), 
-	name_dest varchar(20), 
-	old_balance_dest numeric(18,2), 
-	new_balance_dest numeric(18,2), 
-	is_fraud smallint, 
-	is_flagged_fraud smallint
-);
-
-drop table raw_transactions ;
-create table raw_transactions (
-	time_step int, 
-	transaction_type varchar(20), 
-	amount numeric(18,2), 
-	name_orig varchar(20), 
-	old_balance_orig numeric(18,2), 
-	new_balance_orig numeric(18,2), 
-	name_dest varchar(20), 
-	old_balance_dest numeric(18,2), 
-	new_balance_dest numeric(18,2), 
-	is_fraud smallint, 
-	is_flagged_fraud smallint
-);
-
-SELECT
-    column_name,
-    data_type,
-    character_maximum_length,
-    numeric_precision,
-    numeric_scale
-FROM information_schema.columns
-WHERE table_name = 'raw_transactions'
-ORDER BY ordinal_position;
-
-DROP TABLE IF EXISTS raw_transactions;
-
-CREATE TABLE raw_transactions (
+-- Create table matching the raw data format and data types
+CREATE TABLE IF NOT EXISTS public.raw_transactions (
     time_step INT,
     transaction_type VARCHAR(20),
     amount NUMERIC(18,2),
@@ -74,6 +34,27 @@ FROM information_schema.columns
 WHERE table_schema = 'public'
   AND table_name = 'raw_transactions'
 ORDER BY ordinal_position;
+
+-- Initial profiling inspections
+SELECT
+    COUNT(*) AS loaded_rows,
+    MIN(time_step) AS first_time_step,
+    MAX(time_step) AS last_time_step,
+    COUNT(*) FILTER (
+        WHERE time_step IS NULL
+           OR NULLIF(BTRIM(transaction_type), '') IS NULL
+           OR amount IS NULL
+           OR NULLIF(BTRIM(name_orig), '') IS NULL
+           OR NULLIF(BTRIM(name_dest), '') IS NULL
+    ) AS rows_with_missing_key_fields,
+    COUNT(*) FILTER (WHERE amount < 0) AS negative_amount_rows,
+    COUNT(*) FILTER (
+        WHERE is_fraud IS NULL OR is_fraud NOT IN (0, 1)
+    ) AS invalid_fraud_label_rows,
+    COUNT(*) FILTER (
+        WHERE is_flagged_fraud IS NULL OR is_flagged_fraud NOT IN (0, 1)
+    ) AS invalid_system_flag_rows
+FROM public.raw_transactions;
 
 -- inspect the imported table by checking columns
 select count(*)
@@ -121,3 +102,13 @@ SELECT
 FROM information_schema.columns
 WHERE table_name = 'raw_transactions'
 ORDER BY ordinal_position;
+
+SELECT
+    COUNT(*) AS transaction_count,
+    COUNT(*) FILTER (WHERE is_fraud = 1) AS fraud_count,
+    ROUND(
+        100.0 * COUNT(*) FILTER (WHERE is_fraud = 1)
+        / NULLIF(COUNT(*), 0),
+        4
+    ) AS fraud_rate_pct
+FROM public.raw_transactions;

@@ -224,7 +224,7 @@ cm.false_negatives,
 cm.true_negatives,
 em.precision_ratio *100.0 as precision_pct,
 em.recall_ratio * 100.0 as recall_pct,
-em.precision_ratio * em.recall_ratio * 2.0 * 100.0 / nullif(em.precision_ratio + em.recall_ratio, 0) as f1_score
+em.precision_ratio * em.recall_ratio * 2.0 * 100.0 / nullif(em.precision_ratio + em.recall_ratio, 0) as f1_pct
 from confusion_matrix cm
 cross join eval_metrics em;
 
@@ -241,11 +241,6 @@ cross join eval_metrics em;
 --
 -- This demonstrates why precision alone is insufficient when
 -- evaluating fraud-detection systems.
-
-select min(time_step) as min_time_step,
-max(time_step) as max_time_step,
-count (distinct time_step) as distinct_time_steps
-from raw_transactions ;
 
 select transaction_type,
 count(*) as total_transactions,
@@ -286,5 +281,4 @@ group by transaction_type;
 -- synthetic transaction dataset and the recorded balance behaviour
 -- may reflect its generation process, these mismatches were documented
 -- but not treated as invalid records or removed from the analysis.
-
 

@@ -170,11 +170,64 @@ from rate_changes
 order by time_step;
 
 -- Analysis: Change in rolling fraud rate
---
--- Business question:
--- When does the 7-time-step rolling fraud rate increase
--- or decrease relative to the previous time step?
---
--- Purpose:
--- Detect sudden changes in sustained fraud activity rather
--- than relying only on isolated time-step fraud rates.
+
+-- Business question: When did the rolling fraud rate change,
+-- and how many transactions were behind that change?
+WITH step_summary AS (
+    SELECT
+        time_step,
+        COUNT(*) AS transaction_count,
+        COUNT(*) FILTER (WHERE is_fraud = 1) AS fraud_count
+    FROM public.raw_transactions
+    GROUP BY time_step
+),
+step_bounds AS (
+    SELECT MIN(time_step) AS first_step, MAX(time_step) AS last_step
+    FROM step_summary
+),
+complete_steps AS (
+    SELECT
+        steps.time_step,
+        COALESCE(s.transaction_count, 0) AS transaction_count,
+        COALESCE(s.fraud_count, 0) AS fraud_count
+    FROM step_bounds AS b
+    CROSS JOIN LATERAL
+        generate_series(b.first_step, b.last_step) AS steps(time_step)
+    LEFT JOIN step_summary AS s USING (time_step)
+),
+rolling_counts AS (
+    SELECT
+        time_step,
+        transaction_count,
+        fraud_count,
+        COUNT(*) OVER recent_steps AS steps_in_window,
+        SUM(transaction_count) OVER recent_steps AS rolling_transaction_count,
+        SUM(fraud_count) OVER recent_steps AS rolling_fraud_count
+    FROM complete_steps
+    WINDOW recent_steps AS (
+        ORDER BY time_step
+        ROWS BETWEEN 6 PRECEDING AND CURRENT ROW
+    )
+),
+rolling_rates AS (
+    SELECT
+        *,
+        CASE WHEN steps_in_window = 7 THEN
+            100.0 * rolling_fraud_count / NULLIF(rolling_transaction_count, 0)
+        END AS rolling_fraud_rate_pct
+    FROM rolling_counts
+)
+SELECT
+    time_step,
+    transaction_count,
+    fraud_count,
+    rolling_transaction_count,
+    rolling_fraud_count,
+    ROUND(rolling_fraud_rate_pct, 4) AS rolling_7_fraud_rate_pct,
+    ROUND(
+        rolling_fraud_rate_pct
+        - LAG(rolling_fraud_rate_pct) OVER (ORDER BY time_step),
+        4
+    ) AS change_pct_points
+FROM rolling_rates
+ORDER BY time_step;
